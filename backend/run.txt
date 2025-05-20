@@ -1,0 +1,18 @@
+pip install torch sklearn
+
+
+python data_preparation_context.py
+python contextual_bandit.py
+python app_context.py
+
+python app_ab_testing.py
+# After collecting interactions, run:
+python analyze_ab_testing.py
+
+python data_preparation_context.py
+python ncf_model.py
+python contextual_bandit.py
+python app_ab_testing.py
+
+python analyze_ab_testing.py
+

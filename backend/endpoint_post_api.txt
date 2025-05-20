@@ -1,0 +1,8 @@
+curl -X POST http://localhost:5000/recommend_context/1 \
+-H "Content-Type: application/json" \
+-d '{"device": "mobile", "hour": 10, "n": 3}'
+
+curl http://localhost:5000/recommend/1?device=mobile&hour=10
+curl -X POST http://localhost:5000/interaction \
+-H "Content-Type: application/json" \
+-d '{"user_id": 1, "product_id": 101, "rating": 5, "timestamp": "2025-05-07", "model_type": "ncf"}'

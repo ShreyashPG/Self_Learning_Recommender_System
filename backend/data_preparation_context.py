@@ -1,4 +1,5 @@
 import pandas as pd
+import sqlite3
 
 # Update interactions data with context
 interactions_data = {

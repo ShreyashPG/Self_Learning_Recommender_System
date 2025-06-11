@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import sqlite3
 
 # Simulated user-item interaction data
 interactions_data = {
@@ -36,3 +37,7 @@ print("Interactions DataFrame:")
 print(interactions_df.head())
 print("\nProducts DataFrame:")
 print(products_df.head())
+
+#connect to SQLite database and save DataFrames
+interactions_df.to_sql('interactions', sqlite3.connect('interactions.db'), if_exists='replace', index=False)
+products_df.to_sql('products', sqlite3.connect('products.db'), if_exists='replace', index=False)

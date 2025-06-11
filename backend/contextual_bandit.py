@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import sqlite3
 from sklearn.preprocessing import OneHotEncoder
+import flask
 
 # Load data from databases
 conn_interactions = sqlite3.connect('interactions.db')
@@ -53,9 +54,36 @@ def recommend_bandit(user_id, context, n=5):
     top_item_ids = [item_ids[i] for i in selected_arms]
     return products_df[products_df['product_id'].isin(top_item_ids)][['product_id', 'name']].to_dict('records')
 
-# Example usage
-context = {'device': 'mobile', 'hour': 10}
-recommendations = recommend_bandit(user_id=1, context=context, n=3)
-print(f"Contextual Recommendations for User 1:")
-for item in recommendations:
-    print(f"- {item['name']} (ID: {item['product_id']})")
+
+@app.route('/api/recommendations', methods=['POST'])
+def get_recommendations():
+    data = request.json
+    user_id = data.get('user_id')
+    device = data.get('device')
+    hour = data.get('hour', pd.Timestamp.now().hour)  # Default to current hour
+
+    if not user_id or not device:
+        return jsonify({"error": "user_id and device are required"}), 400
+
+    context = {'device': device, 'hour': int(hour)}
+    recommendations = recommend_bandit(user_id, context, n=3)
+    
+    if "error" in recommendations:
+        return jsonify(recommendations), 400
+    
+    return jsonify({
+        "user_id": user_id,
+        "context": context,
+        "recommendations": recommendations
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
+
+
+# # Example usage
+# context = {'device': 'mobile', 'hour': 10}
+# recommendations = recommend_bandit(user_id=1, context=context, n=3)
+# print(f"Contextual Recommendations for User 1:")
+# for item in recommendations:
+#     print(f"- {item['name']} (ID: {item['product_id']})")

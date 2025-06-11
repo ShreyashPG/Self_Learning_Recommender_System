@@ -3,17 +3,19 @@ import numpy as np
 import sqlite3
 from sklearn.preprocessing import OneHotEncoder
 
-# Load data
-conn = sqlite3.connect('interactions.db')
-interactions_df = pd.read_sql('SELECT * FROM interactions', conn)
+# Load data from databases
+conn_interactions = sqlite3.connect('interactions.db')
+interactions_df = pd.read_sql('SELECT * FROM interactions', conn_interactions)
+
+conn_products = sqlite3.connect('products.db')
+products_df = pd.read_sql('SELECT * FROM products', conn_products)
 
 # Encode contextual features
-encoder = OneHotEncoder(sparse=True)
+encoder = OneHotEncoder(sparse_output=True)
 context_features = encoder.fit_transform(interactions_df[['device', 'hour']])
-products_df = pd.read_csv('products.csv')
 item_ids = products_df['product_id'].tolist()
 
-# Contextual bandit class
+# Contextual bandit class (unchanged)
 class ContextualBandit:
     def __init__(self, n_arms, context_dim):
         self.n_arms = n_arms

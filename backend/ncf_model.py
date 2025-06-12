@@ -22,7 +22,7 @@ class InteractionsDataset(Dataset):
         self.ratings = torch.tensor(df['rating'].values, dtype=torch.float)
 
     def __len__(self):
-        return len self.ratings)
+        return len(self.ratings)
 
     def __getitem__(self, idx):
         return self.users[idx], self.items[idx], self.ratings[idx]
